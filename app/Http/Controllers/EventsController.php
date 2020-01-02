@@ -57,21 +57,21 @@ class EventsController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param $id
      * @return Response
      */
-    public function update()
+    public function update($id)
     {
         $validation = Validator::make(request()->all(), [
-            'id' => 'required|integer',
-            'title' => 'min:1',
+            'title' => 'string|min:1',
             'time_from' => 'date',
             'time_to' => 'date'
         ]);
 
-        $event = Event::find(request()->id);
-        if ($event) {
+        $event = Event::find($id);
+        if ($event && $validation->fails() === false) {
             $event->update(request()->all());
-            return $validation->fails() === true ? '0' : $event;
+            return $event;
         }
         return 'Something is wrong with the data being passed';
     }
